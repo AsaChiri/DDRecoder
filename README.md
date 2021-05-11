@@ -25,6 +25,7 @@ FortuneDayssss/BilibiliUploader
 - check_interval: 直播间开播状态检查间隔，单位为秒，每个监控直播间单独计数，因此如果监控直播间较多，建议适当调大。由于B站API访问次数限制，建议不要小于30。默认：100
 - print_interval：控制台消息打印间隔，单位为秒。
 - data_path: 数据文件路径。默认："./"（即程序所在路径）
+- room_name_in_naming: 是否在生成的文件、文件夹名中带上开播时的直播间名称。默认：False
 - logger: 日志相关设置
   - log_path: 日志文件路径。默认："./log"
   - log_level: 日志级别，可选DEBUG\INFO\WARN

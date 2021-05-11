@@ -13,6 +13,9 @@ class BiliLive(BaseLive):
         self.room_id = config.get('spec', {}).get('room_id', '')
         self.site_name = 'BiliBili'
         self.site_domain = 'live.bilibili.com'
+        # 放在这里保证一次不断流的直播会一直用最初的直播间名
+        self.room_name = self.get_room_info()['room_name'] if config.get(
+            'root', {}).get('room_name_in_naming', False) else ""
 
     def get_room_info(self) -> dict:
         data = {}
@@ -23,7 +26,7 @@ class BiliLive(BaseLive):
         }).json()
         logging.debug(self.generate_log("房间信息请求结果：" + response['msg']))
         if response['msg'] == 'ok':
-            data['roomname'] = response['data']['title']
+            data['room_name'] = response['data']['title']
             data['area_name'] = response['data']['area_name']
             data['parent_area_name'] = response['data']['parent_area_name']
             data['site_name'] = self.site_name

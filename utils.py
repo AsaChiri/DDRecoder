@@ -46,22 +46,30 @@ def init_data_dirs(root_dir: str = os.getcwd()) -> None:
     check_and_create_dir(os.path.join(root_dir, 'data', 'splits'))
 
 
-def init_record_dir(room_id: str, global_start: datetime.datetime, root_dir: str = os.getcwd()) -> str:
+def generate_general_path_base(room_id: str, timestamp: datetime.datetime, room_name: str = "") -> str:
+    # TODO: 该替换操作不可逆。可以考虑生成一个metadata文件用于保留（包括直播间名称在内的）各种元信息
+    filename_safe_room_name = room_name.translate(
+        "".maketrans("_\/|:&?<>\"", "---------'"))
+    timestamp_str = timestamp.strftime('%Y-%m-%d_%H-%M-%S')
+    return "_".join(filter(None, [room_id, timestamp_str, filename_safe_room_name]))
+
+
+def init_record_dir(room_id: str, global_start: datetime.datetime, room_name: str = "", root_dir: str = os.getcwd()) -> str:
     dirs = os.path.join(root_dir, 'data', 'records',
-                        f"{room_id}_{global_start.strftime('%Y-%m-%d_%H-%M-%S')}")
+                        f"{generate_general_path_base(room_id, global_start, room_name)}")
     check_and_create_dir(dirs)
     return dirs
 
 
-def init_danmu_log_dir(room_id: str, global_start: datetime.datetime, root_dir: str = os.getcwd()) -> str:
+def init_danmu_log_dir(room_id: str, global_start: datetime.datetime, room_name: str = "", root_dir: str = os.getcwd()) -> str:
     log_dir = os.path.join(
-        root_dir, 'data', 'danmu', f"{room_id}_{global_start.strftime('%Y-%m-%d_%H-%M-%S')}")
+        root_dir, 'data', 'danmu', f"{generate_general_path_base(room_id, global_start, room_name)}")
     check_and_create_dir(log_dir)
     return log_dir
 
 
-def generate_filename(room_id: str) -> str:
-    return f"{room_id}_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.flv"
+def generate_video_filename(room_id: str, room_name: str = "") -> str:
+    return f"{generate_general_path_base(room_id, datetime.datetime.now(), room_name)}.flv"
 
 
 def get_global_start_from_records(record_dir: str) -> datetime.datetime:
@@ -69,29 +77,34 @@ def get_global_start_from_records(record_dir: str) -> datetime.datetime:
     return datetime.datetime.strptime(" ".join(base.split("_")[1:3]), '%Y-%m-%d %H-%M-%S')
 
 
-def get_merged_filename(room_id: str, global_start: datetime.datetime, root_dir: str = os.getcwd()) -> str:
+def get_room_name_from_records(record_dir: str) -> str:
+    base = os.path.basename(record_dir)
+    return base.split("_")[3]
+
+
+def get_merged_filename(room_id: str, global_start: datetime.datetime, room_name: str = "", root_dir: str = os.getcwd()) -> str:
     filename = os.path.join(root_dir, 'data', 'merged',
-                            f"{room_id}_{global_start.strftime('%Y-%m-%d_%H-%M-%S')}_merged.mp4")
+                            f"{generate_general_path_base(room_id, global_start, room_name)}_merged.mp4")
     return filename
 
 
-def init_outputs_dir(room_id: str, global_start: datetime.datetime, root_dir: str = os.getcwd()) -> str:
+def init_outputs_dir(room_id: str, global_start: datetime.datetime, room_name: str = "", root_dir: str = os.getcwd()) -> str:
     dirs = os.path.join(root_dir, 'data', 'outputs',
-                        f"{room_id}_{global_start.strftime('%Y-%m-%d_%H-%M-%S')}")
+                        f"{generate_general_path_base(room_id, global_start, room_name)}")
     check_and_create_dir(dirs)
     return dirs
 
 
-def init_splits_dir(room_id: str, global_start: datetime.datetime, root_dir: str = os.getcwd()) -> str:
+def init_splits_dir(room_id: str, global_start: datetime.datetime, room_name: str = "", root_dir: str = os.getcwd()) -> str:
     dirs = os.path.join(root_dir, 'data', 'splits',
-                        f"{room_id}_{global_start.strftime('%Y-%m-%d_%H-%M-%S')}")
+                        f"{generate_general_path_base(room_id, global_start, room_name)}")
     check_and_create_dir(dirs)
     return dirs
 
 
-def get_merge_conf_path(room_id: str, global_start: datetime.datetime, root_dir: str = os.getcwd()) -> str:
+def get_merge_conf_path(room_id: str, global_start: datetime.datetime, room_name: str = "", root_dir: str = os.getcwd()) -> str:
     filename = os.path.join(root_dir, 'data', 'merge_confs',
-                            f"{room_id}_{global_start.strftime('%Y-%m-%d_%H-%M-%S')}_merge_conf.txt")
+                            f"{generate_general_path_base(room_id, global_start, room_name)}_merge_conf.txt")
     return filename
 
 

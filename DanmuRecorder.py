@@ -16,7 +16,8 @@ class BiliDanmuRecorder(BiliLive):
     def __init__(self, config: dict, global_start: datetime.datetime):
         BiliLive.__init__(self, config)
         self.room_server_api = 'wss://broadcastlv.chat.bilibili.com/sub'
-        self.danmu_dir = utils.init_danmu_log_dir(self.room_id,global_start,config.get('root',{}).get('data_path',"./"))
+        self.danmu_dir = utils.init_danmu_log_dir(
+            self.room_id, global_start, self.room_name, config.get('root', {}).get('data_path', "./"))
 
     async def __send_heart_beat(self, websocket):
         hb = '00000010001000010000000200000001'

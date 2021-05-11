@@ -60,7 +60,7 @@ class BaseLive(metaclass=abc.ABCMeta):
         room_info = self.get_room_info()
         if room_info['status']:
             logging.info(self.generate_log(
-                "直播间标题："+room_info['roomname']))
+                "直播间标题："+room_info['room_name']))
             return True
         else:
             logging.info(self.generate_log("等待开播"))
