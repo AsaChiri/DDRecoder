@@ -21,7 +21,7 @@ six==1.15.0
 toml==0.10.2
 typed-ast==1.4.1
 typing-extensions==3.7.4.3
-urllib3==1.26.4
+urllib3==1.26.5
 wrapt==1.12.1
 yarl==1.6.3
 bypy==1.6.11
